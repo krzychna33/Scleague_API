@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
 use App\Event;
+use App\TeamMembers;
 
 class Team extends Model
 {
@@ -21,6 +22,10 @@ class Team extends Model
 
     public function events(){
         return $this->belongsToMany(Event::class)->withTimestamps();
+    }
+
+    public function members(){
+        return $this->belongsTo(TeamMembers::class, 'team_members_id');
     }
     
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Team;
 use App\Event;
+use App\Repositories\TeamMembersService;
 
 class TeamsController extends Controller
 {
@@ -13,6 +14,12 @@ class TeamsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
+    protected $teamMembersService;
+
+    public function __construct(TeamMembersService $teamMembersService){
+        $this->teamMembersService = $teamMembersService;
+    }
     public function index()
     {
         return Team::all();
@@ -37,7 +44,10 @@ class TeamsController extends Controller
     public function store(Request $request)
     {
 
-       $team = Team::create($request->all());
+        $team = Team::create($request->all());
+        $team->team_members_id = $this->teamMembersService->setUp();
+        $team->save();
+
 
         return response()->json([
             'message' => 'Team created',
@@ -47,7 +57,10 @@ class TeamsController extends Controller
 
     public function joinToEvent($id, Request $request){
         $team = Team::find($id);
-        $eventId = $request->get('event_id');
+        $eventId = null;
+        if(count($team->events()->where('event_id', $request->get('event_id'))->get())==0){
+            $eventId = $request->get('event_id');
+        }
         if($eventId){
             $team->events()->attach($eventId);
             $event = Event::find($eventId);
@@ -56,16 +69,15 @@ class TeamsController extends Controller
             ], 200);
         } else {
             return response()->json([
-                'message' => 'No event id',
+                'message' => 'You are in the event already',
             ], 400);
         }
     }
 
     public function leftEvent($id, Request $request){
-        //return $request->get('event_id');
         $team = Team::find($id);
-        $eventId;
-        if($team->events()->where('event_id', $request->get('event_id'))->get()){
+        $eventId = null;
+        if(count($team->events()->where('event_id', $request->get('event_id'))->get())>0){
             $eventId = $request->get('event_id');
         }
 
@@ -81,6 +93,21 @@ class TeamsController extends Controller
         }
     }
 
+    public function updateMembers($id, Request $request){
+        // return $request->get('members_urls');
+        $team = Team::find($id);
+        if($this->teamMembersService->updateMembers($team->team_members_id, $request->get('members_urls'))){
+            return response()->json([
+                'message' => 'Members saved.',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Error',
+            ], 400);
+        }
+    }
+
+
     /**
      * Display the specified resource.
      *
@@ -90,11 +117,13 @@ class TeamsController extends Controller
     public function show($id)
     {
         $team = Team::find($id);
+        $teamMembers = $team->members()->get();
         $relatedEvents = $team->events()->get();
         if($team){
             return response()->json([
                 'message' => 'Team found',
                 'data' => $team,
+                'members' => $teamMembers,
                 'relatedEvents' => $relatedEvents
             ], 200);
         } else {
