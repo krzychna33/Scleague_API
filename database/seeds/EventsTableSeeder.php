@@ -18,6 +18,8 @@ class EventsTableSeeder extends Seeder
             $event->name = $faker->company();
             $event->description = $faker->realText();
             $event->prize = $i * 100;
+            $event->slots = 16;
+            $event->start_at = (new DateTime('2020-06-20 22:10:42'))->format("Y-m-d H:i:s");
             $event->save();
         }
     }

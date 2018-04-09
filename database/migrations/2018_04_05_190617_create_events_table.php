@@ -18,9 +18,10 @@ class CreateEventsTable extends Migration
             $table->string('name');
             $table->text('description');
             $table->integer('prize');
-            $table->date('start_at')->nullable();
-            $table->date('join_until')->nullable();
-            $table->date('end_at')->nullable();
+            $table->integer('slots');
+            $table->boolean('joinable')->default(true);
+            $table->boolean('active')->default(true);
+            $table->dateTime('start_at');
             $table->timestamps();
             $table->softDeletes();
         });

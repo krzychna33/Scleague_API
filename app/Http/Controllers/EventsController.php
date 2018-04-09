@@ -52,6 +52,11 @@ class EventsController extends Controller
     public function show($id)
     {
         $event = Event::find($id);
+        if(!$event){
+            return response()->json([
+                'message' => 'Event not found!',
+            ], 404);
+        }
         $relatedTeams = $event->teams()->get();
 
         if($event){
@@ -95,6 +100,21 @@ class EventsController extends Controller
         } else {
             return response()->json([
                 'message' => 'Cant update',
+            ], 400);
+        }
+    }
+
+    public function switchJoinableValue($id, Request $request){
+        $event = Event::find($id);
+        $event->joinable = $request->get('joinable');
+        if($event->save()){
+            return response()->json([
+                'message' => 'Joinable edited:',
+                'data' => $event->joinable
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Error!',
             ], 400);
         }
     }

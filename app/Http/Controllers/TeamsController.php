@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Team;
 use App\Event;
 use App\Repositories\TeamMembersService;
+use App\Repositories\EventService;
 
 class TeamsController extends Controller
 {
@@ -16,9 +17,11 @@ class TeamsController extends Controller
      */
     
     protected $teamMembersService;
+    protected $eventService;
 
-    public function __construct(TeamMembersService $teamMembersService){
+    public function __construct(TeamMembersService $teamMembersService, EventService $eventService){
         $this->teamMembersService = $teamMembersService;
+        $this->eventService = $eventService;
     }
     public function index()
     {
@@ -61,17 +64,30 @@ class TeamsController extends Controller
         if(count($team->events()->where('event_id', $request->get('event_id'))->get())==0){
             $eventId = $request->get('event_id');
         }
+
+
         if($eventId){
-            $team->events()->attach($eventId);
             $event = Event::find($eventId);
-            return response()->json([
-                'message' => 'Sucesfuly joined to '. $event->name,
-            ], 200);
+            if($event->slots > $event->teams()->count() && $event->joinable){
+                $team->events()->attach($eventId);
+                if($event->slots == $event->teams()->count()){
+                    $this->eventService->switchToNotJoinable($event);
+                }
+                return response()->json([
+                    'message' => 'Sucesfuly joined to '. $event->name,
+                ], 200);
+            } else {
+                return response()->json([
+                    'message' => 'Event is full!',
+                ], 400);
+            }
         } else {
             return response()->json([
                 'message' => 'You are in the event already',
             ], 400);
         }
+
+
     }
 
     public function leftEvent($id, Request $request){
@@ -82,6 +98,12 @@ class TeamsController extends Controller
         }
 
         if($eventId){
+            $event = Event::find($eventId);
+            if(!$event->joinable){
+                return response()->json([
+                    'message' => 'You cant leave events that already started',
+                ], 400);
+            }
             $team->events()->detach($eventId);
             return response()->json([
                 'message' => 'Succesfully left event',
@@ -96,6 +118,10 @@ class TeamsController extends Controller
     public function updateMembers($id, Request $request){
         // return $request->get('members_urls');
         $team = Team::find($id);
+        if($team->members()->count()==0){
+            $team->team_members_id = $this->teamMembersService->setUp();
+            $team->save();
+        }
         if($this->teamMembersService->updateMembers($team->team_members_id, $request->get('members_urls'))){
             return response()->json([
                 'message' => 'Members saved.',

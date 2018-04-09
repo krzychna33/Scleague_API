@@ -12,7 +12,7 @@ class Event extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $fillable = ['name', 'description', 'prize'];
+    protected $fillable = ['name', 'description', 'prize', 'slots', 'start_at'];
 
     public function teams(){
         return $this->belongsToMany(Team::class)->withTimestamps();
