@@ -7,6 +7,7 @@ use App\Team;
 use App\Event;
 use App\Repositories\TeamMembersService;
 use App\Repositories\EventService;
+use App\Repositories\MatchesService;
 
 class TeamsController extends Controller
 {
@@ -18,11 +19,14 @@ class TeamsController extends Controller
     
     protected $teamMembersService;
     protected $eventService;
+    protected $matchesService;
 
-    public function __construct(TeamMembersService $teamMembersService, EventService $eventService){
+    public function __construct(TeamMembersService $teamMembersService, EventService $eventService, MatchesService $matchesService){
         $this->teamMembersService = $teamMembersService;
         $this->eventService = $eventService;
+        $this->matchesService = $matchesService;
     }
+
     public function index()
     {
         return Team::all();
@@ -72,6 +76,7 @@ class TeamsController extends Controller
                 $team->events()->attach($eventId);
                 if($event->slots == $event->teams()->count()){
                     $this->eventService->switchToNotJoinable($event);
+                    $this->matchesService->generateMatches($event);
                 }
                 return response()->json([
                     'message' => 'Sucesfuly joined to '. $event->name,

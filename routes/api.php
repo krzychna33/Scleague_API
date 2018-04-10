@@ -11,3 +11,5 @@ Route::post('teams/update-members/{teamid}', 'TeamsController@updateMembers');
 
 
 Route::post('events/switch-joinable/{eventid}', 'EventsController@switchJoinableValue');
+
+Route::post('matches/set-score/{matchid}', 'MatchesController@setScore');
