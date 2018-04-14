@@ -20,11 +20,16 @@ class CreateEventsTable extends Migration
             $table->text('description');
             $table->integer('prize');
             $table->integer('slots');
+            $table->integer('winner_id')->unsigned()->nullable();
             $table->boolean('joinable')->default(true);
             $table->boolean('active')->default(true);
             $table->dateTime('start_at');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('winner_id')
+                ->references('id')
+                ->on('teams');
         });
     }
 

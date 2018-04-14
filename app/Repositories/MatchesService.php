@@ -4,6 +4,7 @@
 namespace App\Repositories;
 use App\Match;
 use App\Event;
+use App\Maps;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -27,6 +28,7 @@ class MatchesService{
                 $prevMatchDate = $match_date;
             }
             $match->match_date = $match_date;
+            $match->maps_id = $this->generateMaps();
             $match->team1_id = $relatedTeams[$n]->id;
             $n++;
             $match->team2_id = $relatedTeams[$n]->id;
@@ -38,6 +40,12 @@ class MatchesService{
 
     public function generateMatchDate($baseDate){
         return $baseDate->addMinutes(120);  
+    }
+
+    public function generateMaps(){
+        $maps = new Maps;
+        $maps->save();
+        return $maps->id;
     }
 
     public function setWinner(Match $match, $team1Score, $team2Score){
@@ -54,9 +62,18 @@ class MatchesService{
             ['event_id', '=', $event->id],
             ['winner_id', '=', NULL]
         ])->count();
+        $eventMaxIndex = log($event->slots, 2);
         if($matchesWithoutWinner==0){
             $event->event_index += 1;
-            $this->generateNextMatches($event);
+            $event->save();
+            if($event->event_index <= $eventMaxIndex){
+                // IF IS NOT IT A FINAL MATCH
+                $this->generateNextMatches($event);
+            } else {
+                $event->active = 0;
+                $event->winner_id = $winnerId;
+                $event->save();
+            }
         }
     }
 
@@ -76,6 +93,7 @@ class MatchesService{
             $match->inner_id = $baseForInnerid;
             $match->match_index = $event->event_index;
             $match->match_date = Carbon::createFromFormat("Y-m-d H:i:s", '2019-04-10 20:00:00');
+            $match->maps_id = $this->generateMaps();
             $match->team1_id = $winners[$i]->winner_id;
             $match->team2_id = $winners[$i+1]->winner_id;
             $match->event_id = $event->id;

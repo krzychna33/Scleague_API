@@ -18,6 +18,7 @@ class CreateMatchesTable extends Migration
             $table->integer('inner_id');
             $table->integer('match_index');
             $table->dateTime('match_date')->nullable();
+            $table->integer('maps_id')->unsigned();
             $table->integer('team1_id')->unsigned();
             $table->integer('team2_id')->unsigned();
             $table->integer('team1_score')->nullable();
@@ -41,6 +42,10 @@ class CreateMatchesTable extends Migration
             $table->foreign('event_id')
                 ->references('id')
                 ->on('events');
+
+            $table->foreign('maps_id')
+                ->references('id')
+                ->on('maps');
         });
     }
 

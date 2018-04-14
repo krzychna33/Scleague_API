@@ -64,6 +64,11 @@ class TeamsController extends Controller
 
     public function joinToEvent($id, Request $request){
         $team = Team::find($id);
+        if(!$team){
+            return response()->json([
+                'message' => 'Team not found!',
+            ], 400);
+        }
         $eventId = null;
         if(count($team->events()->where('event_id', $request->get('event_id'))->get())==0){
             $eventId = $request->get('event_id');
@@ -72,6 +77,11 @@ class TeamsController extends Controller
 
         if($eventId){
             $event = Event::find($eventId);
+            if(!$event){
+                return response()->json([
+                    'message' => 'Event not found!',
+                ], 400);
+            }
             if($event->slots > $event->teams()->count() && $event->joinable){
                 $team->events()->attach($eventId);
                 if($event->slots == $event->teams()->count()){
@@ -97,12 +107,22 @@ class TeamsController extends Controller
 
     public function leftEvent($id, Request $request){
         $team = Team::find($id);
+        if(!$team){
+            return response()->json([
+                'message' => 'Team not found!',
+            ], 400);
+        }
         $eventId = null;
         if(count($team->events()->where('event_id', $request->get('event_id'))->get())>0){
             $eventId = $request->get('event_id');
         }
 
         if($eventId){
+            if(!$event){
+                return response()->json([
+                    'message' => 'Event not found!',
+                ], 400);
+            }
             $event = Event::find($eventId);
             if(!$event->joinable){
                 return response()->json([
