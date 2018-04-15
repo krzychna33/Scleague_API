@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Role;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -48,5 +49,23 @@ class User extends Authenticatable implements JWTSubject
         return [
             'email' => $this->email
         ];
+    }
+
+    public function roles(){
+        return $this->belongsToMany(Role::class, 'roles_has_users')->withTimestamps();
+    }
+
+    public function hasAnyRole($roles){
+        foreach($roles as $role){
+            if($this->hasRole($role)){
+                return true;
+            }
+        }
+    }
+
+    public function hasRole($role){
+        if($this->roles()->where('name', $role)->first()){
+            return true;
+        }
     }
 }

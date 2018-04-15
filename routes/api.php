@@ -2,7 +2,8 @@
 
 
 Route::group([
-    'middleware' => 'auth.api'
+    'middleware' => ['auth.api', 'roles'],
+    'roles' => ['Admin']
 ], function (){
 
     Route::resources([
@@ -15,11 +16,25 @@ Route::group([
     Route::post('teams/update-members/{teamid}', 'TeamsController@updateMembers');
     Route::post('events/switch-joinable/{eventid}', 'EventsController@switchJoinableValue');
     Route::post('matches/set-score/{matchid}', 'MatchesController@setScore');
-
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
 
 });
 
-Route::post('login', 'AuthController@login');
+Route::group([
+    'middleware' => ['auth.api', 'roles'],
+    'roles' => ['Admin', 'User']
+], function (){
+
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+    Route::get('teams', 'TeamsController@index');
+    Route::get('events', 'EventsController@index');
+
+});
+
+
+
+Route::post('login', 'AuthController@login')->name('login');
