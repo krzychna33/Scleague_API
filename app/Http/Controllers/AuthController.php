@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\User;
+use Validator, DB, Hash, Mail, Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -14,8 +17,46 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        //$this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
+
+    public function register(Request $request){
+        $credentials = request(['name','email','password','repeat_password']);
+
+        if($credentials['password']!=$credentials['repeat_password']){
+            return response()->json([
+                'message' => 'Passwords does not match!',
+            ], 400);
+        }
+
+        $rules = [
+            'name' => 'required|max:32|unique:users',
+            'email' => 'required|max:255|unique:users',
+            'password' => 'required|min:6'
+        ];
+
+        $validator = Validator::make($credentials, $rules);
+        
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'Errors in your credentials',
+                'erros' => $validator->messages()
+            ], 400);
+        }
+
+        $name = $credentials['name'];
+        $email = $credentials['email'];
+        $password = Hash::make($credentials['password']);
+        User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => $password
+        ]);
+
+        return $this->login($request);
+
+    }
+
 
     /**
      * Get a JWT via given credentials.
