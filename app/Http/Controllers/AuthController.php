@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Role;
 use Validator, DB, Hash, Mail, Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
@@ -40,21 +41,49 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'message' => 'Errors in your credentials',
-                'erros' => $validator->messages()
+                'errors' => $validator->messages()
             ], 400);
         }
 
+        $role = Role::where('name', 'User')->first();
         $name = $credentials['name'];
         $email = $credentials['email'];
         $password = Hash::make($credentials['password']);
-        User::create([
+        $user = User::create([
             'name' => $name,
             'email' => $email,
-            'password' => $password
+            'password' => $password,
         ]);
+        $user->roles()->attach($role);
+
 
         return $this->login($request);
 
+    }
+
+    public function recoverPassword(Request $request){
+        $user = User::where('email', $request->email)->first();
+
+        if(!$user){
+            return response()->json([
+                'message' => 'Neither user does not match with this email',
+            ], 404);
+        }
+
+        try {
+            Password::sendResetLink($request->only('email'), function (Message $message) {
+                $message->subject('Your Password Reset Link');
+            });
+        } catch (\Exception $e) {
+            //Return with error
+            $error_message = $e->getMessage();
+            return response()->json([
+                'message' => $error_message,
+            ], 404);
+        }
+        return response()->json([
+            'message' => 'Email has been sent!',
+        ], 404);
     }
 
 

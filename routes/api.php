@@ -39,6 +39,5 @@ Route::group([
 
 Route::post('login', 'AuthController@login')->name('login');
 Route::post('register', 'AuthController@register');
-Route::get('test1', function(){
-    return "XD";
-});
+Route::post('recover-password', 'AuthController@recoverPassword');
+
