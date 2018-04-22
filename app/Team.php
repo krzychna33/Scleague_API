@@ -14,10 +14,10 @@ class Team extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $fillable = ['name', 'avatar_url', 'steamgroup', 'description', 'team_owner_id'];
+    protected $fillable = ['name', 'avatar_url', 'steamgroup', 'description'];
 
     public function user(){
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class, 'team_owner_id')->withDefault();
     }
 
     public function events(){

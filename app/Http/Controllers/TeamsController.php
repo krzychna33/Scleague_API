@@ -8,6 +8,7 @@ use App\Event;
 use App\Repositories\TeamMembersService;
 use App\Repositories\EventService;
 use App\Repositories\MatchesService;
+use Illuminate\Support\Facades\Auth;
 
 class TeamsController extends Controller
 {
@@ -33,16 +34,6 @@ class TeamsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Request $request)
-    {
-       
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -51,7 +42,15 @@ class TeamsController extends Controller
     public function store(Request $request)
     {
 
+        $userId = Auth::id();
+
+        if(count(Team::where('team_owner_id', $userId)->get())>0){
+            return response()->json([
+                'message' => 'You already has a team!',
+            ], 400);
+        }
         $team = Team::create($request->all());
+        $team->team_owner_id = $userId;
         $team->team_members_id = $this->teamMembersService->setUp();
         $team->save();
 
@@ -63,12 +62,21 @@ class TeamsController extends Controller
     }
 
     public function joinToEvent($id, Request $request){
+        $userId = Auth::id();
         $team = Team::find($id);
+
         if(!$team){
             return response()->json([
                 'message' => 'Team not found!',
             ], 400);
         }
+
+        if($team->user->id != $userId){
+            return response()->json([
+                'message' => 'Its not your team!',
+            ], 401);
+        }
+
         $eventId = null;
         if(count($team->events()->where('event_id', $request->get('event_id'))->get())==0){
             $eventId = $request->get('event_id');
@@ -106,18 +114,29 @@ class TeamsController extends Controller
     }
 
     public function leftEvent($id, Request $request){
+        $userId = Auth::id();
         $team = Team::find($id);
+
         if(!$team){
             return response()->json([
                 'message' => 'Team not found!',
             ], 400);
         }
+
+        if($team->user->id != $userId){
+            return response()->json([
+                'message' => 'Its not your team!',
+            ], 401);
+        }
+
+
         $eventId = null;
         if(count($team->events()->where('event_id', $request->get('event_id'))->get())>0){
             $eventId = $request->get('event_id');
         }
 
         if($eventId){
+            $event = Event::find($eventId);
             if(!$event){
                 return response()->json([
                     'message' => 'Event not found!',
@@ -141,8 +160,16 @@ class TeamsController extends Controller
     }
 
     public function updateMembers($id, Request $request){
-        // return $request->get('members_urls');
+        $userId = Auth::id();
         $team = Team::find($id);
+
+        if($team->user->id != $userId){
+            return response()->json([
+                'message' => 'Its not your team!',
+            ], 401);
+        }
+
+
         if($team->members()->count()==0){
             $team->team_members_id = $this->teamMembersService->setUp();
             $team->save();
@@ -205,6 +232,14 @@ class TeamsController extends Controller
      */
     public function update(Request $request, Team $team)
     {
+        $userId = Auth::id();
+
+        if($team->user->id != $userId){
+            return response()->json([
+                'message' => 'Its not your team!',
+            ], 401);
+        }
+
         if($team->update($request->all())){
             return response()->json([
                 'message' => 'Team updated',
@@ -225,6 +260,16 @@ class TeamsController extends Controller
      */
     public function destroy($id)
     {
+        $userId = Auth::id();
+        $team = Team::find($id);
+
+
+        if($team->user->id != $userId){
+            return response()->json([
+                'message' => 'Its not your team!',
+            ], 401);
+        }
+
         if(Team::destroy($id)){
             return response()->json([
                 'message' => 'Deleted.',

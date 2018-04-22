@@ -27,11 +27,16 @@ Route::group([
     'roles' => ['Admin', 'User']
 ], function (){
 
+    Route::resources([
+        'teams' => 'TeamsController',
+    ]);
+
+    Route::post('teams/join-to-event/{teamid}', 'TeamsController@joinToEvent');
+    Route::post('teams/left-event/{teamid}', 'TeamsController@leftEvent');
+
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
-    Route::get('teams', 'TeamsController@index');
-    Route::get('events', 'EventsController@index');
 
 });
 

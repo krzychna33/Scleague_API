@@ -21,7 +21,7 @@ class CreateTeamsTable extends Migration
             $table->string('avatar_url')->nullable();
             $table->string('steamgroup')->nullable();
             $table->text('description')->nullable();
-            $table->integer('team_owner_id')->unsigned();
+            $table->integer('team_owner_id')->unsigned()->nullable();
             $table->integer('team_members_id')->unsigned()->nullable();
             $table->timestamps();
             $table->softDeletes();
