@@ -1,59 +1,11 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# SCLeague API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+###[Laravel project]
 
-## About Laravel
+This is a REST-API for CS:GO League.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+### Routes
+![routes](https://lh3.googleusercontent.com/c5xPZnhJxAExT7byuQPP7RP4g_SbKQvKlK_RziG4kDF_N8bFs9tVR6DZMgWtQ5K-UFXA0MFy_6F6COLmaffN94R-NAW1tqmOqFU8abdVv5RIui2KOGvuqyiYX_BabVVwZxEDA7AzdSpZWBnDh_mQLuR69jxwMj4dCaVjBBeQG5ElFL9Vl-70EUKpzKuAvKzoJbeJe64EmIYaWb5IYyJXOsw1gsYSFRrbCRLB0Nwjrq0quLrDxEcYIO0QHMXID9cBY1rcJJ82PM7OZ0EL_df4tMADLVRpI58KSjDKFHAzRlkxC-DBF2wkvPRG2paaj_Ac0UV6sdQ_Q8AqHkOgcfMksoydgxxF4jIKKniGXXobYpMQ9M1bm52SXcqphjt8TyaZI3AW8yVcOiqBLESgRCKBHdguvwwBduA-19K6BcnIQxQkt2wUzAfVSjeGJaLmrH1rOMxOh5_5gvsw3g8kzoH_ofsyEWL84l5ENTtHzJLLePCnuwgTeunsvR9RVxg-gZlitI4PPTpDWWyChXnwhC0Mgep_XoVMkT7U3KdmxfG-SSX0HllAFxzv7IuHpUdHgMcnL09dBdFrb9CoRtKz7qGprtW2UT36tMQvJj_DBJARwtqfGYuu7HckQEeBehMkZWYvbg6MkmmqLN9mMbNno4MqpqhVtroQMrv0DyZabDRICVoKkRTjo9IPbGoNIuc8MYMnSNkrXrJsoxbXOc8lbBPOuhIo=w362-h631-no)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
-
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### DB Project
+![db](https://lh3.googleusercontent.com/iq9aEeqS_ed8onuEh8fb4bEXRHc0LeN4u9HeYju1F9A9MKU-hLkcqWZDzKQbiqNl4Aq3h4MR3TIQIXoqWr4oHAHEbX11fwjZYOirr0wHKWaVosNt13etuCt8kiUKv8mI4TRLweiJCKZKlJaeqBfx4rcDgJPGNjtxjs6ADp1YauMF-DdUx1r6b-8Og1d2oN1yqMJR-PiiKdPK4yctnxcnQOTLjimPSa7cEPe7PPtg2DGu1oUcJSttnHqLI-LClsx7QY0CfIAOOxNoaB4l2dig37UZ1E4Dk7wkxNb_Mrn66A2aBqBNb6ey6BaQUGo7HBbCAsfAis1hkOP_qHLDR1DOJjx1qN2-MMj6J-K5JibWYHKELS9OGrsGT29sgpP7mKcN5YXwOKSqjm6pM91NwZAX4ITTBuuXqtHx62r5OjshmQoE1uUNgNRVXLZF8AG81loRxDZ-Lz9o7hLJdrkF7C3dJxIZ5ABHMisgl-nsZYOkJ4butM1jtg9vqCLbIqnjmARzw_Sa3iHlcd2h425l8pC8Aaf1JxTHKF0tS3WLx5HdXo4cWurj7YLuy3U93HSvCLdfwn26ymh4RPU8MhZEKzPkkmFEUyLe_HoKLvoCyNPFiGW9n_H4QWtkvj6TwkIQtNjkPSKrgG7gWe8TAb-Lio4f6R4GLAzcNKRTLRnaPgh6m0zwLAfwRt9zIxl3QfecClRB8eJ7oBD7bFwFuhWF8evrHCN2=w816-h750-no)
